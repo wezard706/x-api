@@ -3,13 +3,21 @@
 # Table name: books
 #
 #  id           :bigint           not null, primary key
-#  title        :string(255)      not null
 #  description  :string(255)
 #  price        :integer          not null
-#  publisher_id :bigint           not null
 #  published_at :date
+#  title        :string(255)      not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  publisher_id :bigint           not null
+#
+# Indexes
+#
+#  index_books_on_publisher_id  (publisher_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (publisher_id => publishers.id)
 #
 class Book < ApplicationRecord
   belongs_to :publisher
