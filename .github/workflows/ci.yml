@@ -1,0 +1,35 @@
+name: ci
+on: push
+jobs:
+  rspec:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: mysql:8.0.32
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 1
+          MYSQL_ROOT_HOST: '%'
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install
+      - name: Set up the database
+        run: bin/rails db:create db:schema:load
+      - name: Run rspec
+        run: bundle exec rspec spec/
+    env:
+      RAILS_ENV: test
+      DATABASE_HOST: 127.0.0.1
+      DATABASE_PORT: 3306
