@@ -14,6 +14,6 @@ class AuthController < ApplicationController
   private
 
   def sign_up_params
-    params.require(:auth).permit(:name, :email, :password, :password_confirmation)
+    params.require(:auth).permit(:email, :password, :password_confirmation).merge(name: params[:username])
   end
 end
