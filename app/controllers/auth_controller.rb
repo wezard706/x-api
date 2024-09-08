@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AuthController < ApplicationController
-
   def sign_up
     user = User.new(sign_up_params)
 
