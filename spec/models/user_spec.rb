@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.describe User do
   describe 'バリデーション' do
     context 'nameが設定されていない場合' do
       it 'バリデーションエラーになること' do
-        user = User.new(email: 'test@example.com',
-                        password: 'password',
-                        password_confirmation: 'password')
+        user = described_class.new(email: 'test@example.com',
+                                   password: 'password',
+                                   password_confirmation: 'password')
 
         expect(user.valid?).to be false
         expect(user.errors.full_messages).to include("Name can't be blank")
@@ -15,9 +17,9 @@ RSpec.describe User, type: :model do
 
     context 'emailが設定されていない場合' do
       it 'バリデーションエラーになること' do
-        user = User.new(name: 'test',
-                        password: 'password',
-                        password_confirmation: 'password')
+        user = described_class.new(name: 'test',
+                                   password: 'password',
+                                   password_confirmation: 'password')
 
         expect(user.valid?).to be false
         expect(user.errors.full_messages).to include("Email can't be blank")
@@ -26,20 +28,20 @@ RSpec.describe User, type: :model do
 
     context '不正なemailが設定されている場合' do
       it 'バリデーションエラーになること' do
-        user = User.new(name: 'test',
-                        email: 'invalid email',
-                        password: 'password',
-                        password_confirmation: 'password')
+        user = described_class.new(name: 'test',
+                                   email: 'invalid email',
+                                   password: 'password',
+                                   password_confirmation: 'password')
 
         expect(user.valid?).to be false
-        expect(user.errors.full_messages).to include("Email is invalid")
+        expect(user.errors.full_messages).to include('Email is invalid')
       end
     end
 
     context 'パスワードが設定されていない場合' do
       it 'バリデーションエラーになること' do
-        user = User.new(name: 'test',
-                        email: 'test@example.com')
+        user = described_class.new(name: 'test',
+                                   email: 'test@example.com')
 
         expect(user.valid?).to be false
         expect(user.errors.full_messages).to include("Password can't be blank")
@@ -49,9 +51,9 @@ RSpec.describe User, type: :model do
     context '確認用のパスワードが設定されていない場合' do
       context 'パスワードが設定されている場合' do
         it 'バリデーションエラーになること' do
-          user = User.new(name: 'test',
-                          email: 'test@example.com',
-                          password: 'password')
+          user = described_class.new(name: 'test',
+                                     email: 'test@example.com',
+                                     password: 'password')
 
           expect(user.valid?).to be false
           expect(user.errors.full_messages).to include("Password confirmation can't be blank")
@@ -60,12 +62,12 @@ RSpec.describe User, type: :model do
 
       context 'パスワードが設定されていない場合' do
         it 'バリデーションエラーにならないこと' do
-          User.new(name: 'test',
-                   email: 'test@example.com',
-                   password: 'password',
-                   password_confirmation: 'password').save!
+          described_class.new(name: 'test',
+                              email: 'test@example.com',
+                              password: 'password',
+                              password_confirmation: 'password').save!
 
-          user = User.find_by(email: 'test@example.com')
+          user = described_class.find_by(email: 'test@example.com')
           user.name = 'changed name'
 
           expect(user.valid?).to be true
@@ -75,10 +77,10 @@ RSpec.describe User, type: :model do
 
     context '確認用のパスワードがパスワードと一致しない場合' do
       it 'バリデーションエラーになること' do
-        user = User.new(name: 'test',
-                        email: 'test@example.com',
-                        password: 'password',
-                        password_confirmation: 'no match')
+        user = described_class.new(name: 'test',
+                                   email: 'test@example.com',
+                                   password: 'password',
+                                   password_confirmation: 'no match')
 
         expect(user.valid?).to be false
         expect(user.errors.full_messages).to include("Password confirmation doesn't match Password")
@@ -96,7 +98,7 @@ RSpec.describe User, type: :model do
 
     context 'パスワードが一致する場合' do
       it '認証に成功したUserのオブジェクトが返ること' do
-        user = User.authenticate_by(email:, password:)
+        user = described_class.authenticate_by(email:, password:)
 
         expect(user.email).to eq(email)
       end
@@ -104,7 +106,7 @@ RSpec.describe User, type: :model do
 
     context 'emailが一致しない場合' do
       it 'nilが返ること' do
-        user = User.authenticate_by(email: 'no match', password:)
+        user = described_class.authenticate_by(email: 'no match', password:)
 
         expect(user).to be_nil
       end
@@ -112,7 +114,7 @@ RSpec.describe User, type: :model do
 
     context 'パスワードが一致しない場合' do
       it 'nilが返ること' do
-        user = User.authenticate_by(email:, password: 'no match')
+        user = described_class.authenticate_by(email:, password: 'no match')
 
         expect(user).to be_nil
       end
