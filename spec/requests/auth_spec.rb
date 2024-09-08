@@ -13,7 +13,7 @@ RSpec.describe 'Auth' do
     context 'パラメータが正しい場合' do
       let!(:valid_params) do
         {
-          name: 'test_user',
+          username: 'test_user',
           email: 'test@example.com',
           password: 'password',
           password_confirmation: 'password'
