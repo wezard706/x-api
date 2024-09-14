@@ -7,7 +7,7 @@ class AuthController < ApplicationController
     if user.save
       head :created
     else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: format_errors(user.errors) }, status: :unprocessable_entity
     end
   end
 
@@ -15,5 +15,13 @@ class AuthController < ApplicationController
 
   def sign_up_params
     params.require(:auth).permit(:email, :password, :password_confirmation).merge(name: params[:username])
+  end
+
+  def format_errors(errors)
+    errors.full_messages.map do |message|
+      {
+        message:
+      }
+    end
   end
 end

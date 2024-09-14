@@ -42,5 +42,7 @@ module RailsProjectTemplate
     config.generators.system_tests = nil
 
     config.api_only = true
+
+    config.i18n.default_locale = :ja
   end
 end
