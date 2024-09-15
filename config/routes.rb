@@ -10,5 +10,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  post '/sign_up', to: 'users#create'
+  get '/hello', to: 'hello#index'
+
+  post '/sign_up', to: 'auth#sign_up'
 end

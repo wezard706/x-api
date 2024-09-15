@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-class UsersController < ApplicationController
-  wrap_parameters :user, include: %i[email username password password_confirmation]
-
-  def create
-    user = User.new(user_params)
+class AuthController < ApplicationController
+  def sign_up
+    user = User.new(sign_up_params)
 
     if user.save
       head :created
@@ -15,8 +13,8 @@ class UsersController < ApplicationController
 
   private
 
-  def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation).merge(name: params[:username])
+  def sign_up_params
+    params.require(:auth).permit(:email, :password, :password_confirmation).merge(name: params[:username])
   end
 
   def format_errors(errors)
