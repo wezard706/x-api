@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Users' do
+RSpec.describe 'Auth' do
   describe 'POST /sign_up' do
     subject { post '/sign_up', params: valid_params.to_json, headers: }
 
