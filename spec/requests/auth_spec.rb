@@ -29,7 +29,7 @@ RSpec.describe 'Auth' do
     context 'パラメータが不正な場合' do
       let!(:valid_params) do
         {
-          name: 'test_user',
+          username: 'test_user',
           email: 'test@example.com',
           password: 'password',
           password_confirmation: 'no_match'
@@ -39,6 +39,17 @@ RSpec.describe 'Auth' do
       it '422が返ること' do
         subject
         expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'エラーメッセージが返ること' do
+        subject
+
+        json_response = response.parsed_body
+        expect(json_response['errors']).to eq [
+          {
+            'message' => '確認用のパスワードとパスワードの入力が一致しません'
+          }
+        ]
       end
     end
   end

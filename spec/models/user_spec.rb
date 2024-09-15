@@ -11,7 +11,7 @@ RSpec.describe User do
                                    password_confirmation: 'password')
 
         expect(user.valid?).to be false
-        expect(user.errors.full_messages).to include("Name can't be blank")
+        expect(user.errors.full_messages).to eq ['ユーザー名を入力してください']
       end
     end
 
@@ -22,7 +22,7 @@ RSpec.describe User do
                                    password_confirmation: 'password')
 
         expect(user.valid?).to be false
-        expect(user.errors.full_messages).to include("Email can't be blank")
+        expect(user.errors.full_messages).to eq(%w[メールアドレスは不正な値です メールアドレスを入力してください])
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe User do
                                    password_confirmation: 'password')
 
         expect(user.valid?).to be false
-        expect(user.errors.full_messages).to include('Email is invalid')
+        expect(user.errors.full_messages).to eq(['メールアドレスは不正な値です'])
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe User do
                                    email: 'test@example.com')
 
         expect(user.valid?).to be false
-        expect(user.errors.full_messages).to include("Password can't be blank")
+        expect(user.errors.full_messages).to eq(['パスワードを入力してください'])
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe User do
                                      password: 'password')
 
           expect(user.valid?).to be false
-          expect(user.errors.full_messages).to include("Password confirmation can't be blank")
+          expect(user.errors.full_messages).to eq(['確認用のパスワードを入力してください'])
         end
       end
 
@@ -83,7 +83,7 @@ RSpec.describe User do
                                    password_confirmation: 'no match')
 
         expect(user.valid?).to be false
-        expect(user.errors.full_messages).to include("Password confirmation doesn't match Password")
+        expect(user.errors.full_messages).to eq(['確認用のパスワードとパスワードの入力が一致しません'])
       end
     end
   end
