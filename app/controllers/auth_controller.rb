@@ -11,6 +11,17 @@ class AuthController < ApplicationController
     end
   end
 
+  def sign_in
+    user = User.authenticate_by(email: params[:email], password: params[:password])
+
+    if user.present?
+      response.headers['Authorization'] = Jwt.encode(email: params[:email])
+      head :ok
+    else
+      head :unauthorized
+    end
+  end
+
   private
 
   def sign_up_params

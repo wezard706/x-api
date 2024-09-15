@@ -53,4 +53,35 @@ RSpec.describe 'Auth' do
       end
     end
   end
+
+  describe 'POST /sign_in' do
+    subject { post '/sign_in', params: params.to_json, headers: }
+
+    let!(:headers) do
+      { 'Content-Type' => 'application/json' }
+    end
+
+    let!(:params) do
+      {
+        email: Faker::Internet.email,
+        password: Faker::Internet.password
+      }
+    end
+
+    let!(:user) do
+      create(:user,
+             email: params[:email],
+             password: params[:password])
+    end
+
+    it '200が返ること' do
+      subject
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'Authorization header にJWTが設定されていること' do
+      subject
+      expect(response.headers['Authorization']).to be_present
+    end
+  end
 end
