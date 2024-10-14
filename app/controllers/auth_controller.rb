@@ -15,8 +15,11 @@ class AuthController < ApplicationController
     user = User.authenticate_by(email: params[:email], password: params[:password])
 
     if user.present?
-      response.headers['Authorization'] = Jwt.encode(email: params[:email])
-      head :ok
+      render json: {
+        user_id: user.id,
+        user_name: user.name,
+        token: Jwt.encode(email: params[:email])
+      }
     else
       head :unauthorized
     end
