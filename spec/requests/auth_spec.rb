@@ -79,9 +79,13 @@ RSpec.describe 'Auth' do
       expect(response).to have_http_status(:ok)
     end
 
-    it 'Authorization header にJWTが設定されていること' do
+    it 'ユーザーID、ユーザー名、トークンが返ること' do
       subject
-      expect(response.headers['Authorization']).to be_present
+
+      json_response = response.parsed_body
+      expect(json_response['user_id']).to eq(user.id)
+      expect(json_response['user_name']).to eq(user.name)
+      expect(json_response['token']).to be_present
     end
   end
 end
