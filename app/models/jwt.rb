@@ -9,7 +9,7 @@ module Jwt
 
   ALGORITHM = 'HS256'
 
-  def self.encode(email:)
+  def self.encode(email)
     payload = {
       email:,
       exp: Time.current.to_i + EXPIRED_SECONDS
@@ -17,7 +17,7 @@ module Jwt
     JWT.encode payload, SECRET, ALGORITHM
   end
 
-  def self.decode(jwt:)
+  def self.decode(jwt)
     JWT.decode jwt, SECRET, true, { algorithm: ALGORITHM }
   end
 end

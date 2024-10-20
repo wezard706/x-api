@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AuthController < ApplicationController
+  skip_before_action :require_current_user!
+
   def sign_up
     user = User.new(sign_up_params)
 
@@ -18,7 +20,7 @@ class AuthController < ApplicationController
       render json: {
         user_id: user.id,
         user_name: user.name,
-        token: Jwt.encode(email: params[:email])
+        token: Jwt.encode(params[:email])
       }
     else
       head :unauthorized
