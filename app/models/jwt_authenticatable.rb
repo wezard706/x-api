@@ -2,12 +2,9 @@
 
 module JwtAuthenticatable
   def authorize!
-    Rails.logger.info("authorization_header: #{authorization_header}")
     return if authorization_header.nil?
 
-    Rails.logger.info("jwt: #{jwt}")
     decoded_jwt = Jwt.decode(jwt)
-    Rails.logger.info("decoded_jwt: #{decoded_jwt}")
     @current_user = User.find_by(email: decoded_jwt.first['email'])
   rescue JWT::ExpiredSignature
     Rails.logger.info('signature has been expired.')
@@ -26,7 +23,6 @@ module JwtAuthenticatable
   end
 
   def jwt
-    Rails.logger.info("authorization_header size: #{authorization_header.size}")
     /\ABearer\s(?<result>\S+)\z/ =~ authorization_header
     result
   end

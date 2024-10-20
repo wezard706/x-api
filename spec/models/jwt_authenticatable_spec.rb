@@ -24,18 +24,6 @@ RSpec.describe JwtAuthenticatable do
 
       before do
         instance.request.headers['Authorization'] = "Bearer #{jwt}"
-
-        # 現在のRails.loggerを保存
-        @original_logger = Rails.logger
-
-        # 標準出力にログを出力する設定に変更
-        Rails.logger = Logger.new(STDOUT)
-        Rails.logger.level = Logger::DEBUG
-      end
-
-      after do
-        # テスト終了後、元のRails.loggerに戻す
-        Rails.logger = @original_logger
       end
 
       it '@current_user がセットされること' do
