@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_08_022527) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_26_081243) do
+  create_table "follows", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "source_user_id", null: false
+    t.bigint "target_user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_user_id"], name: "index_follows_on_source_user_id"
+    t.index ["target_user_id"], name: "index_follows_on_target_user_id"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -21,4 +30,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_08_022527) do
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
+  add_foreign_key "follows", "users", column: "source_user_id"
+  add_foreign_key "follows", "users", column: "target_user_id"
 end

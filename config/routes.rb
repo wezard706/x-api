@@ -15,4 +15,6 @@ Rails.application.routes.draw do
   post '/sign_in', to: 'auth#sign_in'
 
   resources :users
+
+  resources :follows, only: :create
 end
