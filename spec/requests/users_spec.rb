@@ -3,15 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Users' do
-  describe 'GET /users/:id' do
-    let!(:authorized_user) { create(:user) }
-    let!(:jwt) { Jwt.encode(authorized_user.email) }
-    let!(:headers) do
-      {
-        'Authorization' => "Bearer #{jwt}"
-      }
-    end
+  let!(:authorized_user) { create(:user) }
+  let!(:jwt) { Jwt.encode(authorized_user.email) }
+  let!(:headers) do
+    {
+      'Authorization' => "Bearer #{jwt}"
+    }
+  end
 
+  describe 'GET /users/:id' do
     context 'ユーザーが存在する場合' do
       let!(:user) { create(:user) }
 
@@ -25,8 +25,10 @@ RSpec.describe 'Users' do
         get("/users/#{user.id}", headers:)
 
         json_response = response.parsed_body
-        expect(json_response['id']).to eq(user.id)
-        expect(json_response['name']).to eq(user.name)
+        expect(json_response).to eq({
+                                      'id' => user.id,
+                                      'name' => user.name
+                                    })
       end
     end
 
@@ -36,6 +38,30 @@ RSpec.describe 'Users' do
 
         expect(response).to have_http_status(:not_found)
       end
+    end
+  end
+
+  describe 'GET /users' do
+    let!(:user) { create(:user) }
+
+    it '200が返ること' do
+      get('/users', headers:)
+
+      expect(response).to have_http_status(:ok)
+
+      json_response = response.parsed_body
+      expect(json_response.first).to eq(
+        {
+          'id' => authorized_user.id,
+          'name' => authorized_user.name
+        }
+      )
+      expect(json_response.second).to eq(
+        {
+          'id' => user.id,
+          'name' => user.name
+        }
+      )
     end
   end
 end
