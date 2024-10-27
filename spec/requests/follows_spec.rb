@@ -14,9 +14,9 @@ RSpec.describe 'Follows' do
         'Authorization' => "Bearer #{jwt}"
       }
     end
-    let!(:target_user) { create(:user) }
+    let!(:followed) { create(:user) }
     let!(:params) do
-      { target_user_id: target_user.id }
+      { followed_id: followed.id }
     end
 
     it '201が返ること' do

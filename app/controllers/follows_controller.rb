@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class FollowsController < ApplicationController
-  before_action :set_target_user
+  before_action :set_followed
   def create
-    follow = Follow.new(source_user: current_user, target_user: @target_user)
+    follow = Follow.new(follower: current_user, followed: @followed)
 
     if follow.save
       head :created
@@ -14,8 +14,8 @@ class FollowsController < ApplicationController
 
   private
 
-  def set_target_user
-    @target_user = User.find(params[:target_user_id])
+  def set_followed
+    @followed = User.find(params[:followed_id])
   end
 
   def format_errors(errors)
