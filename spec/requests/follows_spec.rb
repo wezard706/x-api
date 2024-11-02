@@ -3,24 +3,17 @@
 require 'rails_helper'
 
 RSpec.describe 'Follows' do
-  describe 'POST /follows' do
-    subject { post '/follows', params: params.to_json, headers: }
+  include_context 'header'
 
-    let!(:authorized_user) { create(:user) }
-    let!(:jwt) { Jwt.encode(authorized_user.email) }
-    let!(:headers) do
-      {
-        'Content-Type' => 'application/json',
-        'Authorization' => "Bearer #{jwt}"
-      }
-    end
+  describe 'POST /follows' do
     let!(:followed) { create(:user) }
     let!(:params) do
       { followed_id: followed.id }
     end
 
     it '201が返ること' do
-      subject
+      post('/follows', params: params.to_json, headers:)
+
       expect(response).to have_http_status(:created)
     end
   end
