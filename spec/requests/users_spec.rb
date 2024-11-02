@@ -3,13 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Users' do
-  let!(:authorized_user) { create(:user) }
-  let!(:jwt) { Jwt.encode(authorized_user.email) }
-  let!(:headers) do
-    {
-      'Authorization' => "Bearer #{jwt}"
-    }
-  end
+  include_context 'header'
 
   describe 'GET /users/:id' do
     context 'ユーザーが存在する場合' do

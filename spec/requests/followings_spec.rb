@@ -3,16 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe 'Followings' do
-  describe 'GET /users/:id/followings' do
-    let!(:headers) do
-      user = create(:user)
-      jwt = Jwt.encode(user.email)
-      {
-        'Content-Type' => 'application/json',
-        'Authorization' => "Bearer #{jwt}"
-      }
-    end
+  include_context 'header'
 
+  describe 'GET /users/:id/followings' do
     let!(:user) { create(:user) }
     let!(:followed) { create(:user) }
     let!(:follow) { create(:follow, follower: user, followed:) }
