@@ -17,6 +17,14 @@
 #  index_users_on_name   (name) UNIQUE
 #
 class User < ApplicationRecord
+  has_many :active_relationships, class_name: 'Follow',
+                                  foreign_key: 'follower_id', inverse_of: :user, dependent: :destroy
+  has_many :followings, through: :active_relationships, source: :followed
+
+  has_many :passive_relationships, class_name: 'Follow',
+                                   foreign_key: 'followed_id', inverse_of: :user, dependent: :destroy
+  has_many :followers, through: :passive_relationships, source: :follower
+
   has_secure_password
 
   validates :name, presence: true, uniqueness: { case_insensitive: true }

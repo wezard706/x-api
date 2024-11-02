@@ -14,7 +14,9 @@ Rails.application.routes.draw do
 
   post '/sign_in', to: 'auth#sign_in'
 
-  resources :users
+  resources :users do
+    resources :followings, only: [:index], controller: 'users/followings'
+  end
 
   resources :follows, only: :create
 end
