@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FollowsController < ApplicationController
+class FollowsController < AuthenticatedController
   before_action :set_followed
   def create
     follow = Follow.new(follower: current_user, followed: @followed)
