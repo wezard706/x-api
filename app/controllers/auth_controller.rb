@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class AuthController < ApplicationController
-  skip_before_action :require_current_user!
-
   def sign_up
     user = User.new(sign_up_params)
 
