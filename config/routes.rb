@@ -10,11 +10,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  post '/sign_up', to: 'auth#sign_up'
+  resources :sessions, only: [:create]
 
-  post '/sign_in', to: 'auth#sign_in'
-
-  resources :users do
+  resources :users, only: %i[index show create] do
     resources :followings, only: [:index], controller: 'users/followings'
   end
 
