@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UsersController < AuthenticatedController
+  skip_before_action :require_current_user!, only: [:create]
+
   def index
     users = User.order(:id)
 
@@ -13,7 +15,21 @@ class UsersController < AuthenticatedController
     render json: user_response(user)
   end
 
+  def create
+    user = User.new(user_params)
+
+    if user.save
+      head :created
+    else
+      render json: error_response(user.errors), status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def user_params
+    params.permit(:email, :password, :password_confirmation).merge(name: params[:username])
+  end
 
   def users_response(users)
     users.map do |user|
@@ -26,5 +42,14 @@ class UsersController < AuthenticatedController
       id: user.id,
       name: user.name
     }
+  end
+
+  def error_response(errors)
+    formatted_errors = errors.full_messages.map do |message|
+      {
+        message:
+      }
+    end
+    { errors: formatted_errors }
   end
 end
