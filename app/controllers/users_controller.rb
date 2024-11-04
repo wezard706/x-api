@@ -40,7 +40,9 @@ class UsersController < AuthenticatedController
   def user_response(user)
     {
       id: user.id,
-      name: user.name
+      name: user.name,
+      following_count: user.followings.count,
+      follower_count: user.followers.count
     }
   end
 
