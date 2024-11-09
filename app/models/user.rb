@@ -25,6 +25,8 @@ class User < ApplicationRecord
                                    foreign_key: 'followed_id', inverse_of: :user, dependent: :destroy
   has_many :followers, through: :passive_relationships, source: :follower
 
+  has_one_attached :profile_image
+
   has_secure_password
 
   validates :name, presence: true, uniqueness: { case_insensitive: true }
@@ -33,4 +35,16 @@ class User < ApplicationRecord
             presence: true,
             uniqueness: { case_insensitive: true }
   validates :password_confirmation, presence: true, if: -> { password.present? }
+
+  def profile_image_url
+    Rails.application.routes.url_helpers.rails_blob_url(profile_image) if profile_image.attached?
+  end
+
+  def following_count
+    followings.count
+  end
+
+  def follower_count
+    followers.count
+  end
 end

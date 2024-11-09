@@ -7,22 +7,49 @@ RSpec.describe 'Users' do
 
   describe 'GET /users/:id' do
     context 'ユーザーが存在する場合' do
-      let!(:user) { create(:user) }
+      context 'プロフィール画像が存在する場合' do
+        let!(:user) { create(:user, :with_profile_image) }
 
-      it '200が返ること' do
-        get("/users/#{user.id}", headers:)
+        it '200が返ること' do
+          get("/users/#{user.id}", headers:)
 
-        expect(response).to have_http_status(:ok)
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'ユーザーID,ユーザー名が返ること' do
+          get("/users/#{user.id}", headers:)
+
+          json_response = response.parsed_body
+          expect(json_response).to eq({
+                                        'id' => user.id,
+                                        'name' => user.name,
+                                        'follower_count' => 0,
+                                        'following_count' => 0,
+                                        'profile_image_url' => user.profile_image_url
+                                      })
+        end
       end
 
-      it 'ユーザーID,ユーザー名が返ること' do
-        get("/users/#{user.id}", headers:)
+      context 'プロフィール画像が存在しない場合' do
+        let!(:user) { create(:user) }
 
-        json_response = response.parsed_body
-        expect(json_response).to eq({
-                                      'id' => user.id,
-                                      'name' => user.name
-                                    })
+        it '200が返ること' do
+          get("/users/#{user.id}", headers:)
+
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'ユーザーID,ユーザー名が返ること' do
+          get("/users/#{user.id}", headers:)
+
+          json_response = response.parsed_body
+          expect(json_response).to eq({
+                                        'id' => user.id,
+                                        'name' => user.name,
+                                        'follower_count' => 0,
+                                        'following_count' => 0
+                                      })
+        end
       end
     end
 
@@ -47,13 +74,17 @@ RSpec.describe 'Users' do
       expect(json_response.first).to eq(
         {
           'id' => authorized_user.id,
-          'name' => authorized_user.name
+          'name' => authorized_user.name,
+          'follower_count' => 0,
+          'following_count' => 0
         }
       )
       expect(json_response.second).to eq(
         {
           'id' => user.id,
-          'name' => user.name
+          'name' => user.name,
+          'follower_count' => 0,
+          'following_count' => 0
         }
       )
     end
@@ -67,18 +98,37 @@ RSpec.describe 'Users' do
     end
 
     context 'パラメータが正しい場合' do
-      let!(:params) do
-        {
-          username: 'test_user',
-          email: 'test@example.com',
-          password: 'password',
-          password_confirmation: 'password'
-        }
+      context 'プロフィール画像が存在する場合' do
+        let!(:params) do
+          file = fixture_file_upload(Rails.root.join('spec/fixtures/files/profile_image.jpg'), 'image/jpeg')
+          {
+            username: 'test_user',
+            email: 'test@example.com',
+            password: 'password',
+            password_confirmation: 'password'
+          }.merge(profile_image: file)
+        end
+
+        it '201が返ること' do
+          subject
+          expect(response).to have_http_status(:created)
+        end
       end
 
-      it '201が返ること' do
-        subject
-        expect(response).to have_http_status(:created)
+      context 'プロフィール画像が存在しない場合' do
+        let!(:params) do
+          {
+            username: 'test_user',
+            email: 'test@example.com',
+            password: 'password',
+            password_confirmation: 'password'
+          }
+        end
+
+        it '201が返ること' do
+          subject
+          expect(response).to have_http_status(:created)
+        end
       end
     end
 
