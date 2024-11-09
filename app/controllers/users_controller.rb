@@ -28,20 +28,17 @@ class UsersController < AuthenticatedController
   private
 
   def user_params
-    params.permit(:email, :password, :password_confirmation).merge(name: params[:username])
+    params.permit(:email, :password, :password_confirmation, :profile_image).merge(name: params[:username])
   end
 
   def users_response(users)
     users.map do |user|
-      user_response(user)
+      user.as_json(only: %i[id name], methods: %i[following_count follower_count])
     end
   end
 
   def user_response(user)
-    {
-      id: user.id,
-      name: user.name
-    }
+    user.as_json(only: %i[id name], methods: %i[following_count follower_count profile_image_url]).compact
   end
 
   def error_response(errors)
