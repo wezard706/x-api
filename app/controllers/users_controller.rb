@@ -17,12 +17,9 @@ class UsersController < AuthenticatedController
 
   def create
     user = User.new(user_params)
+    user.save!
 
-    if user.save
-      head :created
-    else
-      render json: ErrorResponse.new(user.errors.full_messages), status: :unprocessable_entity
-    end
+    head :created
   end
 
   private

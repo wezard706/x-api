@@ -153,7 +153,7 @@ RSpec.describe 'Users' do
         json_response = response.parsed_body
         expect(json_response['errors']).to eq [
           {
-            'message' => '確認用のパスワードとパスワードの入力が一致しません'
+            'message' => 'バリデーションに失敗しました: 確認用のパスワードとパスワードの入力が一致しません'
           }
         ]
       end

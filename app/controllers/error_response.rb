@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ErrorResponse
   Error = Data.define(:message)
 
@@ -7,7 +9,7 @@ class ErrorResponse
     end
   end
 
-  def to_json(options)
+  def to_json(_options)
     {
       errors: @errors.map(&:to_h)
     }.to_json
