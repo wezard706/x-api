@@ -8,7 +8,7 @@ class FollowsController < AuthenticatedController
     if follow.save
       head :created
     else
-      render json: { errors: format_errors(follow.errors) }, status: :unprocessable_entity
+      render json: ErrorResponse.new(follow.errors), status: :unprocessable_entity
     end
   end
 
@@ -16,13 +16,5 @@ class FollowsController < AuthenticatedController
 
   def set_followed
     @followed = User.find(params[:followed_id])
-  end
-
-  def format_errors(errors)
-    errors.full_messages.map do |message|
-      {
-        message:
-      }
-    end
   end
 end

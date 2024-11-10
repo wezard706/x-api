@@ -21,7 +21,7 @@ class UsersController < AuthenticatedController
     if user.save
       head :created
     else
-      render json: error_response(user.errors), status: :unprocessable_entity
+      render json: ErrorResponse.new(user.errors.full_messages), status: :unprocessable_entity
     end
   end
 
@@ -39,14 +39,5 @@ class UsersController < AuthenticatedController
 
   def user_response(user)
     user.as_json(only: %i[id name], methods: %i[following_count follower_count profile_image_url]).compact
-  end
-
-  def error_response(errors)
-    formatted_errors = errors.full_messages.map do |message|
-      {
-        message:
-      }
-    end
-    { errors: formatted_errors }
   end
 end
