@@ -25,6 +25,8 @@ class User < ApplicationRecord
                                    foreign_key: 'followed_id', inverse_of: :user, dependent: :destroy
   has_many :followers, through: :passive_relationships, source: :follower
 
+  has_many :tweets, dependent: :destroy
+
   has_one_attached :profile_image
 
   has_secure_password
