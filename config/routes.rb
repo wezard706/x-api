@@ -17,4 +17,6 @@ Rails.application.routes.draw do
   end
 
   resources :follows, only: :create
+
+  resources :tweets, only: :create
 end
