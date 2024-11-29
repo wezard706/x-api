@@ -18,11 +18,11 @@
 #
 class User < ApplicationRecord
   has_many :active_relationships, class_name: 'Follow',
-                                  foreign_key: 'follower_id', inverse_of: :user, dependent: :destroy
+                                  foreign_key: 'follower_id', inverse_of: :follower, dependent: :destroy
   has_many :followings, through: :active_relationships, source: :followed
 
   has_many :passive_relationships, class_name: 'Follow',
-                                   foreign_key: 'followed_id', inverse_of: :user, dependent: :destroy
+                                   foreign_key: 'followed_id', inverse_of: :followed, dependent: :destroy
   has_many :followers, through: :passive_relationships, source: :follower
 
   has_many :tweets, dependent: :destroy
